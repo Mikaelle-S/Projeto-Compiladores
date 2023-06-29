@@ -23,7 +23,7 @@ O analisador sintático deve apenas indicar na saída se o programa está sintat
 + 1° Parte – **09/06/23** - 30% da entrega - **Entregar via email:** Arquivo .jj contendo a especificação da gramática do MiniJava no formato correto para uso pelo JavaCC
 + 2° Parte – **19/06/23** -  70% da entrega - **Apresentar (15min) o projeto:** explicar o que fazem as classes produzidas e mostrar uma demo do compilador em funcionamento. 
 
-	–** Entregar via email:** Arquivo .zip com o projeto completo (pastas, classes, docs, arquivos auxiliares, readme.txt)
+	– **Entregar via email:** Arquivo .zip com o projeto completo (pastas, classes, docs, arquivos auxiliares, readme.txt)
 
 
 ##### Exemplo simples de MiniJava usado no projeto :
