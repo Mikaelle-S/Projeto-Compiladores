@@ -1,0 +1,198 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */options{  static = true;}PARSER_BEGIN(Parser)
+import java.io.*;
+public class Parser{  public static void main(String args []) throws ParseException, IOException  {
+    try {
+      Parser parser = new Parser(new FileInputStream(args[0]));
+      parser.Start();
+    }catch(ParseException e) {
+      System.out.println("Erros foram encontrados: " + e);
+    } catch (IOException e) {
+      System.out.println("Erro ao ler o arquivo de entrada: " + e);
+    }          }}PARSER_END(Parser)SKIP :{ 
+  " "
+| "\t"
+| "\n"
+| "\r"
+| < "//" (~[ "\n", "\r" ])*
+    (
+      "\n"
+    | "\r"
+    | "\r\n"
+    ) >
+| < "/*" (~[ "*" ])* "*"
+    (
+      "*"
+    | ~[ "*", "/" ] (~[ "*" ])* "*"
+    )*
+    "/" >
+}
+
+// Definição dos tokensTOKEN : {  <CLASS: "class">
+| <PUBLIC: "public">
+| <STATIC: "static">
+| <VOID: "void">
+| <MAIN: "main">
+| <STRING: "String">
+| <EXTENDS: "extends">
+| <RETURN: "return">
+| <IF: "if">
+| <ELSE: "else">
+| <WHILE: "while">
+| <TRUE: "true">
+| <FALSE: "false">
+| <THIS: "this">
+| <NEW: "new">
+| <INT: "int">
+| <BOOLEAN: "boolean">
+| <LENGTH: "length">
+| <MAIS: "+" >
+| <MENOS: "-" >
+| <MULTIPLICAR: "*" >
+| <MENOR: "<" >
+| <OP_AND: "&&" > // OPERADOR AND
+| <OP_NOT: "!" >
+| <IGUAL: "=" >
+| <PV: ";" > //PONTO&VIRGULA
+| <AP: "(" > // ABRE PARENTESES
+| <FP: ")" > // FECHA PARENTESES
+| <AC: "{" > // ABRE CHAVES
+| <FC: "}" > // FECHA CHAVES
+| <ACO: "[" > // ABRE COLCHETES
+| <FCO: "]" > // FECHA COLCHETES
+| <PONTO: "." >
+| <VIRGULA: "," >
+| <SYSTEM_OUT_PRINTLN: "System.out.println" >
+
+}TOKEN :{  < #LETTER : (["A"-"Z"] | (["a"-"z"])+) >
+| <ID: <LETTER> (<LETTER> | ["0"-"9"] | "_")* >
+| <INTEGER_LITERAL: (["0"-"9"])+ >}
+int Start ():
+{}
+{
+  (Goal())*<EOF>
+  {
+    System.out.print("Sintaxe ok. \n");
+    return 0;  }}//Goal	::=	MainClass ( ClassDeclaration )* <EOF>
+void Goal() :{Token t;}{
+  MainClass()(LOOKAHEAD(2)ClassDeclaration())*
+}
+/*MainClass	::=	"class" Identifier "{"
+ "public" "static" "void" "main" "(" "String" "[" "]" Identifier ")" "{"
+ Statement "}" "}"*/
+void MainClass() :{}{	<CLASS> Identifier() <AC>
+		<PUBLIC> <STATIC> <VOID> <MAIN> <AP> <STRING> <ACO> <FCO> <ID> <FP> <AC>
+		 	Statement()
+		 <FC>
+	<FC>		
+}
+/*ClassDeclaration	::=	"class" Identifier ( "extends" Identifier )?
+"{" ( VarDeclaration )* ( MethodDeclaration )* "}"*/
+void ClassDeclaration():{}{  <CLASS> Identifier() (<EXTENDS> Identifier())? <AC>
+  (VarDeclaration())*(MethodDeclaration())* <FC>}
+//VarDeclaration	::=	Type Identifier ";"
+void VarDeclaration() :{}{  Type() Identifier() <PV>}
+
+/*MethodDeclaration	::=	"public" Type Identifier "(" ( Type Identifier ( "," Type
+Identifier )* )? ")" "{" ( VarDeclaration )* ( Statement )* "return" Expression ";" "}*/
+
+void MethodDeclaration():
+{}
+{
+  <PUBLIC> Type() Identifier() <AP>(Type() Identifier()(<VIRGULA> Type()
+  Identifier())*)?<FP> <AC> (LOOKAHEAD(2)VarDeclaration())* (Statement())*
+  <RETURN> Expression() <PV><FC>
+  }
+
+/*Type	::=	"int" "[" "]"
+|	"boolean"
+|	"int"
+|	Identifier
+*/
+
+void Type():
+{}
+{
+  LOOKAHEAD(2)<INT><ACO><FCO>
+|<BOOLEAN>
+| <INT>
+| Identifier()
+  }
+
+/*Statement	::=	"{" ( Statement )* "}"
+|	"if" "(" Expression ")" Statement "else" Statement
+|	"while" "(" Expression ")" Statement
+|	"System.out.println" "(" Expression ")" ";"
+|	Identifier "=" Expression ";"
+|	Identifier "[" Expression "]" "=" Expression ";"*/
+
+void Statement():
+{}
+{
+  <AC>(Statement())*<FC>
+| <IF> <AP>Expression()<FP> Statement() <ELSE> Statement()
+| <WHILE> <AP>Expression()<FP> Statement()
+| <SYSTEM_OUT_PRINTLN> <AP>Expression()<FP> <PV>
+| LOOKAHEAD(2)Identifier() <IGUAL> Expression() <PV>
+| Identifier() <ACO>Expression()<FCO> <IGUAL> Expression() <PV>
+  }
+
+/*Expression	::=	Expression ( "&&" | "<" | "+" | "-" | "*" ) Expression
+|	Expression "[" Expression "]"
+|	Expression "." "length"
+|	Expression "." Identifier "(" ( Expression ( "," Expression )* )? ")"
+|	<INTEGER_LITERAL>
+|	"true"
+|	"false"
+|	Identifier
+|	"this"
+|	"new" "int" "[" Expression "]"
+|	"new" Identifier "(" ")"
+|	"!" Expression
+|	"(" Expression ")"*/
+
+void Expression():
+{
+  Token t;
+}
+{
+  Term() (Expressionl())*
+}
+
+void Expressionl():
+{
+  Token t;
+}
+{
+  <OP_AND> Term()
+  | <MENOR> Term()
+  | <MAIS> Term()
+  | <MENOS> Term()
+  | <MULTIPLICAR> Term()
+  | <ACO> Expression() <FCO>
+  | LOOKAHEAD(2)<PONTO> <LENGTH>
+  | <PONTO> Identifier() <AP> (Expression() ( <VIRGULA> Expression() )* )? <FP>
+}
+
+void Term():
+{
+  Token t;
+}
+{
+  <INTEGER_LITERAL>
+  | <TRUE>
+  | <FALSE>
+  | Identifier()
+  | <THIS>
+  | LOOKAHEAD(2)<NEW> <INT> <ACO> Expression() <FCO>
+  | <NEW> Identifier() <AP> <FP>
+  | <OP_NOT> Term()
+  | <AP> Expression() <FP>
+}
+
+void Identifier():
+{}
+{
+  <ID>
+}

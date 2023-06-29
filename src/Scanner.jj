@@ -1,0 +1,118 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */options{  static = false;}PARSER_BEGIN(Scanner)
+import java.io.*;
+public class Scanner{  public static void main(String args []) throws ParseException, IOException  {      Scanner lexico = new Scanner(new FileInputStream(args[0]));
+      lexico.Start();      }}PARSER_END(Scanner)SKIP :
+{ 
+  " "
+| "\t"
+| "\n"
+| "\r"
+| < "//" (~[ "\n", "\r" ])*
+    (
+      "\n"
+    | "\r"
+    | "\r\n"
+    ) >
+| < "/*" (~[ "*" ])* "*"
+    (
+      "*"
+    | ~[ "*", "/" ] (~[ "*" ])* "*"
+    )*
+    "/" >
+}
+
+
+// Definição dos tokens
+TOKEN : 
+{
+  <CLASS: "class">
+| <PUBLIC: "public">
+| <STATIC: "static">
+| <VOID: "void">
+| <MAIN: "main">
+| <STRING: "String">
+| <EXTENDS: "extends">
+| <RETURN: "return">
+| <IF: "if">
+| <ELSE: "else">
+| <WHILE: "while">
+| <TRUE: "true">
+| <FALSE: "false">
+| <THIS: "this">
+| <NEW: "new">
+| <INT: "int">
+| <BOOLEAN: "boolean">
+| <LENGTH: "length">
+| <MAIS: "+" >
+| <MENOS: "-" >
+| <MULTIPLICAR: "*" >
+| <MENOR: "<" >
+| <OP_AND: "&&" > // OPERADOR AND
+| <OP_NOT: "!" >
+| <IGUAL: "=" >
+| <PV: ";" > //PONTO&VIRGULA
+| <AP: "(" > // ABRE PARENTESES
+| <FP: ")" > // FECHA PARENTESES
+| <AC: "{" > // ABRE CHAVES
+| <FC: "}" > // FECHA CHAVES
+| <ACO: "[" > // ABRE COLCHETES
+| <FCO: "]" > // FECHA COLCHETES
+| <PONTO: "." >
+| <VIRGULA: "," >
+| <SYSTEM_OUT_PRINTLN: "System.out.println" >
+
+}
+
+TOKEN :
+{
+  < #LETTER : (["A"-"Z"] | (["a"-"z"])+) >
+| <ID: <LETTER> (<LETTER> | ["0"-"9"] | "_")* >
+| <INTEGER_LITERAL: (["0"-"9"])+ >
+}
+void Start ():
+{Token t;}
+{
+  (<CLASS> {System.out.println("Palavra reservada: class"); }
+	| <PUBLIC> {System.out.println("Palavra reservada: public"); }
+	| <STATIC> {System.out.println("Palavra reservada: static"); }
+	| <VOID> {System.out.println("Palavra reservada: void"); }
+	| <MAIN> {System.out.println("Palavra reservada: main"); }
+	| <STRING> {System.out.println("Palavra reservada: string"); }
+	| <EXTENDS> {System.out.println("Palavra reservada: extends"); }
+	| <RETURN> {System.out.println("Palavra reservada: return"); }
+	| <IF> {System.out.println("Estrutura condicional : if"); }
+	| <ELSE> {System.out.println("Estrutura condicional: else"); }
+	| <WHILE> {System.out.println("Estrutura de repetição: while"); }
+	| <TRUE> {System.out.println("Tipo booleano: True"); }
+	| <FALSE> {System.out.println("tipo booleano: False"); }
+	| <THIS> {System.out.println("Palavra reservada: this"); }
+	| <NEW> {System.out.println("Palavra reservada: new"); }
+	| <INT> {System.out.println("Tipo: int"); }
+	| <BOOLEAN> {System.out.println("Tipo: Boolean"); }
+	| <LENGTH> {System.out.println("Palavra reservada: Length"); }
+	| <MAIS> {System.out.println("Operador Mais"); }
+	| <MENOS> {System.out.println("Operação Menos"); }
+	| <MULTIPLICAR> {System.out.println("Operação Multiplicar"); }
+	| <MENOR> {System.out.println("Operador Menor"); }
+	| <OP_AND> {System.out.println("Operador AND"); }
+	| <OP_NOT> {System.out.println("Operador NOT"); }
+	| <IGUAL> {System.out.println("Igual"); }
+	| <PV> {System.out.println("Ponto e virgula"); }
+	| <AP> {System.out.println("Abre Parentese"); }
+	| <FP> {System.out.println("Fecha Parentese"); }
+	| <AC> {System.out.println("Abre Chaves"); }
+	| <FC> {System.out.println("Fecha Chaves"); }
+	| <ACO> {System.out.println("Abre Colchetes"); }
+	| <FCO> {System.out.println("Fecha Colchetes"); }
+	| <PONTO> {System.out.println("Ponto"); }
+	| <VIRGULA> {System.out.println("Virgula"); }
+	| <SYSTEM_OUT_PRINTLN> {System.out.println("System.out.println"); }
+	| t = <ID> {System.out.println("Identificador: " + t.image); }
+	| t = <INTEGER_LITERAL> {System.out.println("Integer: " + t.image);}
+    
+  )*
+  <EOF>
+}
+  
